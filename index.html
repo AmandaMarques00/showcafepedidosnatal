@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Show Café - Pedidos de Natal</title>
+<style>
+  :root{
+    --bg:#f5f5f5;
+    --card:#ffffff;
+    --accent:#b30000;
+    --text:#222;
+    --radius:12px;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text);}
+  .wrap{max-width:720px;margin:18px auto;padding:16px;}
+  .card{background:var(--card);padding:20px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(0,0,0,0.06);}
+  h1{color:var(--accent);font-size:28px;margin:4px 0 12px;text-align:center;}
+  p.lead{font-size:18px;margin:0 0 16px;text-align:center}
+  label{display:block;font-weight:600;margin:10px 0 6px;font-size:18px;}
+  select,input[type="number"],input[type="text"]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:20px;line-height:1.4;}
+  .small{font-size:14px;color:#666;margin-top:6px;}
+  .row{display:flex;gap:12px;}
+  .row .col{flex:1;}
+  button{background:var(--accent);color:#fff;border:none;padding:14px;border-radius:10px;font-size:20px;width:100%;cursor:pointer;margin-top:12px;}
+  .note{margin-top:12px;font-size:16px;color:#333;}
+  /* typography bigger + spacing */
+  body{font-size:24px;line-height:1.7;}
+  .form-control{margin-bottom:6px;}
+  footer{margin-top:14px;text-align:center;font-size:14px;color:#777;}
+  @media(max-width:420px){
+    body{font-size:20px;}
+    h1{font-size:24px;}
+    button{font-size:18px;padding:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" role="main">
+    <h1>Pedidos de Natal – Show Café</h1>
+    <p class="lead">Escolha seus itens e confirme. <strong>Somente retirada no estabelecimento</strong>.</p>
+
+    <label for="itens">Itens disponíveis</label>
+    <div class="form-control">
+      <select id="itens" multiple size="6">
+        <option value="Torta Crocante - R$ 89,99">Torta Crocante - R$ 89,99</option>
+        <option value="Torta Negresco com Limão - R$ 79,99">Torta Negresco com Limão - R$ 79,99</option>
+        <option value="Barratone - R$ 20,00">Barratone - R$ 20,00</option>
+        <option value="Rabanada Leite Ninho - R$ 7,50">Rabanada Leite Ninho - R$ 7,50</option>
+        <option value="Rabanada Nutella - R$ 10,00">Rabanada Nutella - R$ 10,00</option>
+        <option value="Rabanada Doce de Leite - R$ 7,50">Rabanada Doce de Leite - R$ 7,50</option>
+        <option value="Guirlanda de Brownie - R$ 64,99">Guirlanda de Brownie - R$ 64,99</option>
+        <option value="Guirlanda Red Velvet - R$ 64,99">Guirlanda Red Velvet - R$ 64,99</option>
+        <option value="Pudim Panetone - R$ 60,00">Pudim Panetone - R$ 60,00</option>
+        <option value="Pudim Leite Condensado - R$ 49,99">Pudim Leite Condensado - R$ 49,99</option>
+        <option value="Showcottone - R$ 85,99">Showcottone - R$ 85,99</option>
+        <option value="Delícia na Taça - R$ 89,99">Delícia na Taça - R$ 89,99</option>
+      </select>
+      <div class="small">Toque para selecionar múltiplos itens (segure/arraste)</div>
+    </div>
+
+    <label for="quant">Quantidade (aplica para o item selecionado)</label>
+    <div class="form-control">
+      <input id="quant" type="number" min="1" value="1" />
+    </div>
+
+    <label>Retirada</label>
+    <div class="form-control">
+      <input type="text" value="Somente retirada no estabelecimento - Show Café" readonly />
+    </div>
+
+    <label for="nome">Seu nome</label>
+    <div class="form-control">
+      <input id="nome" type="text" placeholder="Ex: Maria" />
+    </div>
+
+    <label for="pag">Forma de pagamento</label>
+    <div class="form-control">
+      <select id="pag">
+        <option>Pix</option>
+        <option>Dinheiro</option>
+        <option>Cartão</option>
+      </select>
+    </div>
+
+    <button id="btnEnviar" type="button">📲 Enviar pedido pelo WhatsApp</button>
+
+    <p class="note">Ao enviar, o pedido abrirá no WhatsApp para confirmar com a nossa equipe.</p>
+
+  </div>
+
+  <footer>Show Café • Pedidos de Natal</footer>
+</div>
+
+<script>
+document.getElementById('btnEnviar').addEventListener('click', function(){
+  const itensEl = document.getElementById('itens');
+  const selecionados = Array.from(itensEl.selectedOptions).map(o => o.value);
+  if(selecionados.length === 0){ alert('Por favor selecione pelo menos um item.'); return; }
+  const quant = document.getElementById('quant').value || 1;
+  const nome = document.getElementById('nome').value.trim() || 'Cliente';
+  const pag = document.getElementById('pag').value;
+  const retirada = 'Somente retirada no estabelecimento - Show Café';
+  // montar mensagem
+  let msg = '*Pedido de Natal*%0A';
+  msg += '*Cliente:* ' + encodeURIComponent(nome) + '%0A';
+  msg += '*Itens:*%0A';
+  selecionados.forEach(function(it){
+    msg += encodeURIComponent('- ' + it + ' (x' + quant + ')') + '%0A';
+  });
+  msg += '%0A*Pagamento:* ' + encodeURIComponent(pag) + '%0A';
+  msg += '*Retirada:* ' + encodeURIComponent(retirada) + '%0A';
+  // enviar
+  const telefone = '5528999099541';
+  const url = 'https://wa.me/' + telefone + '?text=' + msg;
+  window.location.href = url;
+});
+</script>
+</body>
+</html>
